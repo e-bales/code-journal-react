@@ -3,6 +3,34 @@ import { useState } from 'react';
 
 export default function CodeJournal() {
   const [viewState, setViewState] = useState(true);
+  const [titleState, setTitleState] = useState('');
+  const [urlState, setUrlState] = useState('');
+  const [noteState, setNoteState] = useState('');
+
+  function handleSave(event) {
+    event.preventDefault();
+    // const formValues = {
+    //   title: titleState,
+    //   photoUrl: urlState,
+    //   notes: noteState,
+    // };
+    console.log(titleState, urlState, noteState);
+  }
+
+  function handleTitle(event) {
+    setTitleState(event.target.value);
+    console.log(titleState);
+  }
+
+  function handleUrl(event) {
+    setUrlState(event.target.value);
+    console.log(urlState);
+  }
+
+  function handleNote(event) {
+    setNoteState(event.target.value);
+    console.log(noteState);
+  }
 
   function handleEntries() {
     setViewState(!viewState);
@@ -12,7 +40,12 @@ export default function CodeJournal() {
     <div className="light-gray">
       <NavBar entriesclick={handleEntries} />
       <main>
-        <JournalInputs />
+        <JournalInputs
+          save={handleSave}
+          newTitle={handleTitle}
+          newUrl={handleUrl}
+          newNote={handleNote}
+        />
         <JournalEntries />
       </main>
     </div>
@@ -41,34 +74,38 @@ function NavBar({ entriesClick }) {
   );
 }
 
-function JournalInputs() {
+function JournalInputs({ save, newTitle, newUrl, newNote }) {
   return (
     <div className="container" data-view="entry-form">
       <InputViewTitle text={'New Input'} />
-      <form id="entryForm">
+      <form id="entryForm" onSubmit={save}>
         <div className="row margin-bottom-1">
           <Image imgSrc={'CHANGE THIS LATER!'} />
           <div className="column-half">
-            <TitleInput />
-            <PhotoURLInput />
+            <TitleInput title={newTitle} />
+            <PhotoURLInput url={newUrl} />
           </div>
         </div>
         <div className="row margin-bottom-1">
           <div className="column-full">
-            <NotesInput />
+            <NotesInput note={newNote} />
           </div>
         </div>
         <div className="row">
           <div className="column-full d-flex justify-between">
-            <Button
+            {/* <Button
               text="DELETE"
               customClass="invisible delete-entry-button"
               onCustomClick={'CHANGE THIS LATER!'}
-            />
-            <Button
+            /> */}
+            {/* <Button
               text="SAVE"
               customClass="input-b-radius text-padding purple-background white-text"
-              onCustomClick={'CHANGE HTIS LATER!'}
+              onCustomClick={save}
+            /> */}
+            <SaveButton
+              text="SAVE"
+              customClass="input-b-radius text-padding purple-background white-text"
             />
           </div>
         </div>
@@ -87,7 +124,7 @@ function InputViewTitle({ text }) {
   );
 }
 
-function TitleInput() {
+function TitleInput({ title }) {
   return (
     <>
       <label className="margin-bottom-1 d-block">Title</label>
@@ -97,12 +134,13 @@ function TitleInput() {
         type="text"
         id="formTitle"
         name="formTitle"
+        onChange={title}
       />
     </>
   );
 }
 
-function PhotoURLInput() {
+function PhotoURLInput({ url }) {
   return (
     <>
       <label className="margin-bottom-1 d-block">Photo URL</label>
@@ -112,6 +150,7 @@ function PhotoURLInput() {
         type="text"
         id="formURL"
         name="formURL"
+        onChange={url}
       />
     </>
   );
@@ -130,7 +169,7 @@ function Image({ imgSrc }) {
   );
 }
 
-function NotesInput() {
+function NotesInput({ note }) {
   return (
     <>
       <label className="margin-bottom-1 d-block">Notes</label>
@@ -140,14 +179,23 @@ function NotesInput() {
         name="formNotes"
         id="formNotes"
         cols="30"
-        rows="10"></textarea>
+        rows="10"
+        onChange={note}></textarea>
     </>
   );
 }
 
 function Button({ text, customClass, onCustomClick }) {
   return (
-    <button className={customClass} type="button" onClick={onCustomClick}>
+    <button className={customClass} type="submit" onClick={onCustomClick}>
+      {text}
+    </button>
+  );
+}
+
+function SaveButton({ text, customClass }) {
+  return (
+    <button className={customClass} type="submit">
       {text}
     </button>
   );
@@ -176,6 +224,26 @@ function JournalEntries() {
 }
 
 function EntryComponentList({ entries }) {
-  // const renderedList = entries.map(element => '...');  // some map over our entries...
-  // return (<ul className="entry-ul" id="entryUl">{renderedList}</ul>)
+  return;
+}
+
+function renderEntry({ title, note, source }) {
+  return (
+    <li data-entry-id="">
+      <div class="row">
+        <div class="column-half">
+          <img class="input-b-radius form-image" src={source} alt=""></img>
+        </div>
+        <div class="column-half">
+          <div class="row">
+            <div class="column-full d-flex justify-between">
+              <h3>{title}</h3>
+              <i class="fa-solid fa-pencil"></i>
+            </div>
+          </div>
+          <p>{note}</p>
+        </div>
+      </div>
+    </li>
+  );
 }
