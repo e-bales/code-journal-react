@@ -6,30 +6,50 @@ export default function CodeJournal() {
   const [titleState, setTitleState] = useState('');
   const [urlState, setUrlState] = useState('');
   const [noteState, setNoteState] = useState('');
+  const [entryObjs, setEntryObjs] = useState({ ourArray: [] });
+  const [counter, setCounter] = useState(0);
+
+  // const dumbyArray = [{
+  //     title: 'titleState',
+  //     photoUrl: 'urlState',
+  //     notes: 'noteState',
+  //     index: 'counter',
+  //   }, {
+  //     title: 'titleState2',
+  //     photoUrl: 'urlState2',
+  //     notes: 'noteState2',
+  //     index: 'counter2',
+  //   }]
 
   function handleSave(event) {
     event.preventDefault();
-    // const formValues = {
-    //   title: titleState,
-    //   photoUrl: urlState,
-    //   notes: noteState,
-    // };
-    console.log(titleState, urlState, noteState);
+    const formValues = {
+      title: titleState,
+      photoUrl: urlState,
+      notes: noteState,
+      index: counter,
+    };
+    console.log(formValues);
+    setCounter(counter + 1);
+    const array = entryObjs.ourArray.push(formValues);
+    setEntryObjs(array);
+    console.log('HERE!:', entryObjs);
+    // console.log(titleState, urlState, noteState);
   }
 
   function handleTitle(event) {
     setTitleState(event.target.value);
-    console.log(titleState);
+    // console.log(titleState);
   }
 
   function handleUrl(event) {
     setUrlState(event.target.value);
-    console.log(urlState);
+    // console.log(urlState);
   }
 
   function handleNote(event) {
     setNoteState(event.target.value);
-    console.log(noteState);
+    // console.log(noteState);
   }
 
   function handleEntries() {
@@ -46,7 +66,7 @@ export default function CodeJournal() {
           newUrl={handleUrl}
           newNote={handleNote}
         />
-        <JournalEntries />
+        <JournalEntries arrayOfEntryObjs={entryObjs.ourArray} />
       </main>
     </div>
   );
@@ -201,9 +221,10 @@ function SaveButton({ text, customClass }) {
   );
 }
 
-function JournalEntries() {
+function JournalEntries({ arrayOfEntryObjs }) {
+  console.log('Array here: ', arrayOfEntryObjs);
   return (
-    <div className="container hidden" data-view="entries">
+    <div className="container" data-view="entries">
       <div className="row">
         <div className="column-full d-flex justify-between align-center">
           <h1>Entries</h1>
@@ -216,7 +237,7 @@ function JournalEntries() {
       </div>
       <div className="row">
         <div className="column-full">
-          <EntryComponentList entries="CHANGE THIS LATER!" />
+          <EntryComponentList entries={arrayOfEntryObjs} />
         </div>
       </div>
     </div>
@@ -224,26 +245,37 @@ function JournalEntries() {
 }
 
 function EntryComponentList({ entries }) {
-  return;
+  console.log('Inside entryCompList:', entries);
+  const entryList = entries.map((entry) => (
+    <li key={entry.index}>
+      <RenderEntry entryObj={entry} />
+    </li>
+  ));
+  return (
+    <ul className="entry-ul" id="entryUl">
+      {entryList}
+    </ul>
+  );
 }
 
-function renderEntry({ title, note, source }) {
+function RenderEntry({ entryObj }) {
   return (
-    <li data-entry-id="">
-      <div class="row">
-        <div class="column-half">
-          <img class="input-b-radius form-image" src={source} alt=""></img>
-        </div>
-        <div class="column-half">
-          <div class="row">
-            <div class="column-full d-flex justify-between">
-              <h3>{title}</h3>
-              <i class="fa-solid fa-pencil"></i>
-            </div>
-          </div>
-          <p>{note}</p>
-        </div>
+    <div className="row">
+      <div className="column-half">
+        <img
+          className="input-b-radius form-image"
+          src="./images/placeholder-image-square.jpg"
+          alt=""></img>
       </div>
-    </li>
+      <div className="column-half">
+        <div className="row">
+          <div className="column-full d-flex justify-between">
+            <h3>{entryObj.title}</h3>
+            <i className="fa-solid fa-pencil"></i>
+          </div>
+        </div>
+        <p>{'notes'}</p>
+      </div>
+    </div>
   );
 }
