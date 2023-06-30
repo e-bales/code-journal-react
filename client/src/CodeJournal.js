@@ -6,7 +6,10 @@ export default function CodeJournal() {
   const [titleState, setTitleState] = useState('');
   const [urlState, setUrlState] = useState('');
   const [noteState, setNoteState] = useState('');
-  const [entryObjs, setEntryObjs] = useState({ ourArray: [] });
+  const [entryObjs, setEntryObjs] = useState([
+    { title: '1', photoUrl: '2', notes: '3', index: 0 },
+    { title: '1', photoUrl: '2', notes: '3', index: 1 },
+  ]);
   const [counter, setCounter] = useState(0);
 
   // const dumbyArray = [{
@@ -31,8 +34,7 @@ export default function CodeJournal() {
     };
     console.log(formValues);
     setCounter(counter + 1);
-    const array = entryObjs.ourArray.push(formValues);
-    setEntryObjs(array);
+    setEntryObjs(entryObjs.push(formValues));
     console.log('HERE!:', entryObjs);
     // console.log(titleState, urlState, noteState);
   }
@@ -58,7 +60,7 @@ export default function CodeJournal() {
 
   return (
     <div className="light-gray">
-      <NavBar entriesclick={handleEntries} />
+      <NavBar entriesClick={handleEntries} />
       <main>
         <JournalInputs
           save={handleSave}
@@ -66,7 +68,8 @@ export default function CodeJournal() {
           newUrl={handleUrl}
           newNote={handleNote}
         />
-        <JournalEntries arrayOfEntryObjs={entryObjs.ourArray} />
+        <JournalEntries arrayOfEntryObjs={entryObjs ? entryObjs : null} />
+        {console.log('this', entryObjs)}
       </main>
     </div>
   );
